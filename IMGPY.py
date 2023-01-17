@@ -15,6 +15,15 @@ prev_center_x = None
 prev_center_y = None
 prev_velocity_x = 0
 prev_velocity_y = 0
+
+broker="160.75.154.101" #mqtt cloud ip'si
+port=1884
+username="iturockwell"
+password="963258741"
+msg0 = 5
+data = '0'
+dataTopic = ''
+
  
 def on_message(client, userdata, message): #MQTT topic'e subscribe olma
     ##time.sleep(1)
@@ -65,8 +74,8 @@ while True:
             acceleration_x = (velocity_x - prev_velocity_x) / time_elapsed
             acceleration_y = (velocity_y - prev_velocity_y) / time_elapsed
             print(f"Acceleration: ({acceleration_x}, {acceleration_y})")
-            msg0 = acceleration_x
-            client.publish("BoraDeneme1",msg0)
+            #msg0 = acceleration_x
+            #client.publish("BoraDeneme1",msg0)
             # Update the previous velocity
             prev_velocity_x = velocity_x
             prev_velocity_y = velocity_y
