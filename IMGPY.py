@@ -74,8 +74,10 @@ while True:
             acceleration_x = (velocity_x - prev_velocity_x) / time_elapsed
             acceleration_y = (velocity_y - prev_velocity_y) / time_elapsed
             print(f"Acceleration: ({acceleration_x}, {acceleration_y})")
-            #msg0 = acceleration_x
-            #client.publish("BoraDeneme1",msg0)
+            
+            msg0 = acceleration_x
+            client.publish("BoraDeneme1",msg0)
+            
             # Update the previous velocity
             prev_velocity_x = velocity_x
             prev_velocity_y = velocity_y
