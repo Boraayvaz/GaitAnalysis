@@ -7,14 +7,15 @@ broker="160.75.154.101" #mqtt cloud ip'si
 port=1884
 username="iturockwell"
 password="963258741"
-msg0 = "bora"
-
+msg0 = 5
+data = '0'
+dataTopic = ''
 def on_message(client, userdata, message): #MQTT topic'e subscribe olma
-    #time.sleep(1)
+    ##time.sleep(1)
     #global IntVal
     value = str(message.payload.decode("utf-8"))
-    print(value)
-    IntVal = int(value)
+    #print(value)
+    #IntVal = int(value)
     global data #bağlanılan topicten gelen veri
     global dataTopic #bağlanılan topic ismi
 
@@ -27,7 +28,7 @@ client= paho.Client("client-001")
 client.on_message=on_message
 #####
 client.username_pw_set(username, password)
-client.connect(broker)#connect
+client.connect(broker, port)#connect
 client.loop_start() #start loop to process received messages
 client.subscribe("BoraDeneme",0)#subscribe
 
