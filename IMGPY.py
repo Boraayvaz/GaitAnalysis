@@ -1,18 +1,40 @@
 #!/usr/bin/env python3
 import cv2
-
+import paho.mqtt.client as paho
+from time import sleep
 import numpy as np
+import json
  
 # Define the lower and upper bounds of the yellow color in the HSV color space
 lower_yellow = np.array([22, 93, 0])
 upper_yellow = np.array([45, 255, 255])
- 
+msg0 = 1
 # Open the camera
 cap = cv2.VideoCapture(0)
 prev_center_x = None
 prev_center_y = None
 prev_velocity_x = 0
 prev_velocity_y = 0
+ 
+def on_message(client, userdata, message): #MQTT topic'e subscribe olma
+    ##time.sleep(1)
+    #global IntVal
+    value = str(message.payload.decode("utf-8"))
+    #print(value)
+    #IntVal = int(value)
+    global data #bağlanılan topicten gelen veri
+    global dataTopic #bağlanılan topic ismi
+    data = str(message.payload.decode("utf-8"))
+    dataTopic = str(message.topic)
+
+client= paho.Client("client-001")
+######Bind function to callback
+client.on_message=on_message
+#####
+client.username_pw_set(username, password)
+client.connect(broker, port)#connect
+client.loop_start() #start loop to process received messages
+#client.subscribe("BoraDeneme",0)#subscribe    
  
 while True:
     # Read the frame from the camera
@@ -43,7 +65,8 @@ while True:
             acceleration_x = (velocity_x - prev_velocity_x) / time_elapsed
             acceleration_y = (velocity_y - prev_velocity_y) / time_elapsed
             print(f"Acceleration: ({acceleration_x}, {acceleration_y})")
- 
+            msg0 = acceleration_x
+            client.publish("BoraDeneme1",msg0)
             # Update the previous velocity
             prev_velocity_x = velocity_x
             prev_velocity_y = velocity_y
