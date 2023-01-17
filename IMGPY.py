@@ -75,7 +75,7 @@ while True:
             acceleration_y = (velocity_y - prev_velocity_y) / time_elapsed
             print(f"Acceleration: ({acceleration_x}, {acceleration_y})")
             
-            msg0 = acceleration_x
+            msg0 = f"AccelerationX: {acceleration_x},AccelerationY {acceleration_y}"
             client.publish("BoraDeneme1",msg0)
             
             # Update the previous velocity
