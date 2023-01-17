@@ -34,9 +34,10 @@ client.subscribe("BoraDeneme",0)#subscribe
 
 
 while True:
+    client.publish("BoraDeneme1",msg0)
     print(data)
     print(dataTopic)
-    client.publish("BoraDeneme1",msg0) #plc verilerini mqtt cloud'a paylaşma
+     #plc verilerini mqtt cloud'a paylaşma
     
 
 #Node-Red
