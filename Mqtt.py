@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import paho.mqtt.client as paho
 from time import sleep
 from queue import Queue
