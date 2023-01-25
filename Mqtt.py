@@ -1,7 +1,7 @@
 import paho.mqtt.client as paho
 from time import sleep
 from queue import Queue
-import thread
+import threading
 q=Queue()
 broker="160.75.154.101" #mqtt cloud ip'si
 port=1884
@@ -30,7 +30,7 @@ client.connect(broker, port)#connect
 client.loop_start() #start loop to process received messages
 #subscribe
 
-def subscribe(topic, Qos)
+def subscribe(topic, Qos):
     client.subscribe(topic,Qos)
     global SubData
     SubData = data
@@ -41,10 +41,11 @@ def publish(topic, msg):
     print("Data Published")
  
 try: 
-    thread.start_new_thread(subscribe, (topic1, Qos))
+    #thread.start_new_thread(subscribe, (topic1, Qos))
     thread.start_new_thread(publish, (topic2, msg0))
+    print(SubData)
 except: 
-    print "Error while threading"
+    print( "Error while threading")
    
 while 1:
     pass
