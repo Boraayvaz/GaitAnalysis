@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 # Welcome to PyShine
 
 # This code is for the server 
@@ -9,7 +8,7 @@ import socket, cv2, pickle,struct,imutils
 server_socket = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
 host_name  = socket.gethostname()
 host_ip = socket.gethostbyname(host_name)
-print('HOST IP:',host_ip)
+print('0.0.0.0:',host_ip)
 port = 9999
 socket_address = (host_ip,port)
 
