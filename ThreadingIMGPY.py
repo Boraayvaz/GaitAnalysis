@@ -21,15 +21,15 @@ prev_velocity_y = 0
 prev_velocity_x1 = 0
 prev_velocity_y1 = 0
 
-broker="160.75.154.101" #mqtt cloud ip'si
+broker="192.168.4.1" #mqtt cloud ip'si
 port=1884
-username="iturockwell"
-password="963258741"
+username=""
+password=""
 msg0 = ""
 data = '0'
 dataTopic = ''
-topic1 = "topic1"
-topic2 = "topic2"
+topic1 = "GA"
+topic2 = "GA"
 Qos1 = 0
 msg0 = ""
 
@@ -69,16 +69,17 @@ def publish(topic, msg, Sample):
     client2.publish(topic,msg)
     #time.sleep(Sample)
 
-def camView(capture, time_elapsed, pcx, pcy, pvx, pvy):
+def camView(capture, upper_colour, lower_colour, time_elapsed, pcx, pcy, pvx, pvy):
     global msg, accx
-    _, frame = capture.read() # Read the frame from the camera
-    qr_detector = cv2.QRCodeDetector()
-    data, bbox, _ = qr_detector.detectAndDecode(frame)
-    if bbox is not None:
-        print(bbox)
-        x, y, w, h = bbox
-        center_x = x + w // 2
-        center_y = y + h // 2
+    _, frame = cap.read() # Read the frame from the camera
+    hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV) # Convert the frame to the HSV color space   
+    mask = cv2.inRange(hsv, lower_yellow, upper_yellow) # Create a mask for the yellow color
+    contours, hierarchy = cv2.findContours(mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)  # Find the contours of the yellow object
+    if contours:
+        x, y, w, h = cv2.boundingRect(max(contours, key=cv2.contourArea)) # Find the bounding box of the largest contour
+        center_x = x+w//2
+        center_y = y+h//2
+        #if pcx is not None and pcy is not None:
         velocity_x = (center_x - pcx) / time_elapsed
         velocity_y = (center_y - pcy) / time_elapsed   
         accx = (velocity_x - pvx) / time_elapsed
@@ -88,16 +89,6 @@ def camView(capture, time_elapsed, pcx, pcy, pvx, pvy):
         pvy = velocity_y
         pcx = center_x # Update the previous position of the center
         pcy = center_y
-    else:
-        accx = 0
-        accy = 0
-        center_x = 0
-        center_y = 0
-        x = 0
-        y = 0
-        w = 0
-        h = 0
-        
     msg = json.dumps({"AccX": accx,"AccY":  accy});
     
     return frame, center_x, center_y, x, y, w, h, msg, pcx, pcy, pvx, pvy
@@ -110,8 +101,10 @@ def Camera1(topic1, capt):
         global prev_center_y
         global prev_velocity_x
         global prev_velocity_y
+        lower_colour = np.array([22, 93, 0])
+        upper_colour = np.array([45, 255, 255])
         Sample = 0.5
-        frame, center_x, center_y, x, y, w, h, msg0, prev_center_x1, prev_center_y1,prev_velocity_x1 ,prev_velocity_y1  = camView(capt,1, prev_center_x, prev_center_y, prev_velocity_x,prev_velocity_y)
+        frame, center_x, center_y, x, y, w, h, msg0, prev_center_x1, prev_center_y1,prev_velocity_x1 ,prev_velocity_y1  = camView(capt,upper_colour, lower_colour,1, prev_center_x, prev_center_y, prev_velocity_x,prev_velocity_y)
         cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 255), 2) # Draw the bounding box around the yellow object
         cv2.circle(frame, (center_x, center_y), 5, (0, 0, 255), -1)
         cv2.imshow("Frame", frame) # Display the frame
