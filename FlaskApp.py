@@ -11,7 +11,7 @@ def index():
     return contents
 
 def gen():
-    cap = cv2.VideoCapture(1)
+    cap = cv2.VideoCapture(0)
     while True:
         _, frame = cap.read()
         yield (b'--frame\r\n'
@@ -23,4 +23,4 @@ def video_feed():
                     mimetype='multipart/x-mixed-replace; boundary=frame')
 
 if __name__ == '__main__':
-    app.run(port=9999)
+    	app.run(port=9999)
